@@ -2,12 +2,14 @@ package com.inca.productservice.controller;
 
 import com.inca.productservice.entity.Product;
 import com.inca.productservice.service.ProductService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,17 +24,24 @@ public class ProductController {
 
     @RequestMapping("/list")
     public List<Product> list() {
+
+        List<Product> result = new ArrayList<>();
         List<Product> products = productService.listProduct();
         for (Product pro : products) {
-            pro.setName(port + ":" + pro.getName());
+            Product newPro = new Product();
+            BeanUtils.copyProperties(pro, newPro);
+            newPro.setName(port + ":" + pro.getName());
+            result.add(newPro);
         }
-        return products;
+        return result;
     }
 
     @RequestMapping("/findOne")
     public Product findOne(@RequestParam("id") Integer id) {
+        Product newPro = new Product();
         Product product = productService.findOne(id);
-        product.setName(port + ":" + product.getName());
-        return product;
+        BeanUtils.copyProperties(product, newPro);
+        newPro.setName(port + ":" + product.getName());
+        return newPro;
     }
 }
