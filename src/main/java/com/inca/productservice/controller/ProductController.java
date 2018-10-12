@@ -24,7 +24,6 @@ public class ProductController {
 
     @RequestMapping("/list")
     public List<Product> list() {
-
         List<Product> result = new ArrayList<>();
         List<Product> products = productService.listProduct();
         for (Product pro : products) {
